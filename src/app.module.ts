@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
-import * as process from "process";
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import * as process from "process";
       synchronize: true,
       autoLoadEntities: true,
     }),
-    PostModule
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

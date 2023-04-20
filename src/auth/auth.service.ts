@@ -7,10 +7,14 @@ import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/entity/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async validate(loginDto: LoginDto) {
     const user: User = await this.userService.getByEmail(loginDto.email);
@@ -20,6 +24,9 @@ export class AuthService {
     if (!(await bcrypt.compare(loginDto.password, user.password))) {
       throw new BadRequestException('Password missmatch');
     }
-    return user;
+    const payload = { email: user.email, sub: user.id };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }
